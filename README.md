@@ -2,6 +2,25 @@
 
 [Workflow Testing RO-Crate](https://crs4.github.io/life_monitor/workflow_testing_ro_crate) setup for [CCS.BAM to FASTQ + QC](https://workflowhub.eu/workflows/220).
 
+## Steps followed
+
+* Installed Python prerequisites with `pip install planemo repo2rocrate`.
+* Clicked on the "Run on usegalaxy.eu" on the [workflow's page](https://workflowhub.eu/workflows/220) in WorkflowHub to import the workflow in Galaxy Europe.
+* Uploaded [ce#unmap2.bam](https://github.com/samtools/samtools/blob/1224ffbfa249f4e602840e1723bd824c148e0b7d/test/mpileup/ce%23unmap2.bam) to Galaxy to be used as an input file.
+* Ran the workflow on Galaxy and retrieved the invocation id from the Workflow Invocations page (User > Workflow Invocations).
+* Ran `planemo workflow_test_init --galaxy_url https://usegalaxy.eu --from_invocation <INVOCATION_ID> --galaxy_user_key <GALAXY_API_KEY>` (User > Preferences > Manage API Key). This generates an first version of the test setup including: the workflow file; a test-data directory containing the input and all outputs; the Planemo configuration file. The latter specifies an exact comparison of all output files with the expected ones (i.e., the ones under test-data, taken from the specified invocation).
+* Edited the test setup, changing some file names (note that if the workflow is named `xyz.ga`, the Planemo configuration file must be called `xyz-tests.yml`) and the configured checks (some outputs are in a free text format that may easily change between releases or even invocations, so an exact comparison would not be appropriate).
+* Added a simple GitHub Action workflow to run the test under `.github/workflows/wftest.yml`.
+* Generated the crate with `repo2rocrate`:
+
+```
+repo2rocrate \
+  --repo-url https://github.com/simleo/ccs-bam-to-fastq-qc-crate \
+  -o ccs-bam-to-fastq-qc.crate.zip
+```
+
+* Uploaded the zipped crate to LifeMonitor ([dev instance](https://app.dev.lifemonitor.eu/)).
+
 ## Copyright info
 
 The Galaxy workflow `bam-to-fastq-qc.ga` has been copied from [CCS.BAM to FASTQ + QC at version 1](https://workflowhub.eu/workflows/220?version=1), created by Gareth Price and licensed under the [GNU General Public License v3.0 or later](https://spdx.org/licenses/GPL-3.0-or-later.html).
