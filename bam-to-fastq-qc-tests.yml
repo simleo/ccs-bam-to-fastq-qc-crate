@@ -1,0 +1,13 @@
+- doc: Test CCS.BAM to FASTQ + QC
+  job:
+    Input BAM:
+      class: File
+      path: test-data/ce#unmap2.bam
+      filetype: bam
+  outputs:
+    FastQC text file:
+      ftype: txt
+    Converted FastQ reads:
+      path: test-data/converted_reads.fastqsanger
+    BAM file information:
+      ftype: txt
